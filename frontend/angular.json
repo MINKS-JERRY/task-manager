@@ -30,7 +30,7 @@
               "src/assets",
               "src/favicon.ico",
               "src/web.config",
-              "netlify.toml",
+              "src/netlify.toml",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -94,7 +94,7 @@
               "src/assets",
               "src/favicon.ico",
               "src/web.config",
-              "netlify.toml",
+              "src/netlify.toml",
               {
                 "glob": "**/*",
                 "input": "public"
