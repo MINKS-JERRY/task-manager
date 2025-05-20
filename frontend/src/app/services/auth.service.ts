@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -13,15 +13,20 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  register(user: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+  register(user: { username: string; password: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/register`, user).pipe(
+      catchError(this.handleError)
+    );
   }
 
   login(user: { username: string; password: string }): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user).pipe(
       tap(response => {
-        localStorage.setItem('token', response.token);
-      })
+        if (response && response.token) {
+          localStorage.setItem('token', response.token);
+        }
+      }),
+      catchError(this.handleError)
     );
   }
 
@@ -36,5 +41,17 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Server-side error
+      errorMessage = error.error?.message || error.message || errorMessage;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

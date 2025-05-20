@@ -40,11 +40,13 @@ export class RegisterComponent {
 
     const { confirmPassword, ...registerData } = this.user;
     this.authService.register(registerData).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Registration successful:', response);
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.error = err.error || 'Registration failed. Please try again.';
+        console.error('Registration error:', err);
+        this.error = err.message || 'Registration failed. Please try again.';
       }
     });
   }
