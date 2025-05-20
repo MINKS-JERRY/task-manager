@@ -1,17 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl: string;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject('environment') private env: { apiUrl: string }
+  ) {
+    this.apiUrl = `${this.env.apiUrl}/auth`;
+  }
+
+
 
   register(user: { username: string; password: string }): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/register`, user).pipe(
