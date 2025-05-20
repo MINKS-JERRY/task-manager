@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: task-manager-backend
+    env: node
+    buildCommand: npm install
+    startCommand: node app.js
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://taskmanager_admin:TaskManager2025!@#$@cluster0.mongodb.net/task-manager?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: task-manager-jwt-secret-95d36dca8b4e2025
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
