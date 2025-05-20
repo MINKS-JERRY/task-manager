@@ -1,0 +1,53 @@
+<div class="dashboard-container">
+  <div class="task-form">
+    <h2>Add New Task</h2>
+    <form (ngSubmit)="createTask()" #taskForm="ngForm">
+      <div class="form-group">
+        <input
+          type="text"
+          name="title"
+          [(ngModel)]="newTask.title"
+          placeholder="Task Title"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <textarea
+          name="description"
+          [(ngModel)]="newTask.description"
+          placeholder="Task Description"
+          rows="3"
+        ></textarea>
+      </div>
+      <div class="error" *ngIf="error">{{ error }}</div>
+      <button type="submit" [disabled]="!taskForm.form.valid">Add Task</button>
+    </form>
+  </div>
+
+  <div class="tasks-list">
+    <h2>Your Tasks</h2>
+    <div class="tasks-container">
+      <div *ngFor="let task of tasks" class="task-card" [class.completed]="task.completed">
+        <div class="task-header">
+          <h3>{{ task.title }}</h3>
+          <div class="task-actions">
+            <button
+              class="toggle-button"
+              (click)="toggleComplete(task)"
+              [class.completed]="task.completed"
+            >
+              {{ task.completed ? '✓' : '○' }}
+            </button>
+            <button class="delete-button" (click)="deleteTask(task._id!)">
+              ✕
+            </button>
+          </div>
+        </div>
+        <p class="task-description">{{ task.description }}</p>
+      </div>
+      <div *ngIf="tasks.length === 0" class="no-tasks">
+        No tasks yet. Add your first task above!
+      </div>
+    </div>
+  </div>
+</div>

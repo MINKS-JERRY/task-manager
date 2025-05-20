@@ -1,0 +1,11 @@
+<nav class="app-nav">
+  <ng-container *ngIf="!isLoggedIn">
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn">
+    <a routerLink="/tasks" routerLinkActive="active">My Tasks</a>
+    <button (click)="logout()">Logout</button>
+  </ng-container>
+</nav>
+<router-outlet></router-outlet>
