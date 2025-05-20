@@ -26,6 +26,11 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/_redirects",
+              "src/assets",
+              "src/favicon.ico",
+              "src/web.config",
+              "netlify.toml",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -85,6 +90,11 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/_redirects",
+              "src/assets",
+              "src/favicon.ico",
+              "src/web.config",
+              "netlify.toml",
               {
                 "glob": "**/*",
                 "input": "public"
