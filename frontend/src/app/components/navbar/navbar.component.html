@@ -5,6 +5,8 @@
   <div class="navbar-menu">
     <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
       <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/tasks" class="text-white hover:text-gray-300">Tasks</a>
+      <a routerLink="/admin" class="text-white hover:text-gray-300 ml-4">Admin</a>
       <a routerLink="/register" routerLinkActive="active">Register</a>
     </ng-container>
     <ng-template #loggedIn>
