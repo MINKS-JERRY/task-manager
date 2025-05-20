@@ -22,7 +22,16 @@ export class AuthService {
 
   register(user: { username: string; password: string }): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/register`, user).pipe(
-      catchError(this.handleError)
+      tap(() => {
+        // After successful registration, we'll navigate to login
+        this.router.navigate(['/login']);
+      }),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error);
+        }
+        return this.handleError(error);
+      })
     );
   }
 
