@@ -40,9 +40,15 @@ export class AuthService {
       tap(response => {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
+          this.router.navigate(['/tasks']);
         }
       }),
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => new Error(error.error?.message || 'Invalid credentials'));
+        }
+        return this.handleError(error);
+      })
     );
   }
 

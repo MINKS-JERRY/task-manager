@@ -28,7 +28,7 @@ export class LoginComponent {
     this.authService.login(this.user).subscribe({
       next: (response) => {
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/tasks']);
       },
       error: (err) => {
         this.error = err.error || 'Login failed. Please try again.';
