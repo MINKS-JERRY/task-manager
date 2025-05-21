@@ -33,19 +33,37 @@ export class RegisterComponent {
   onRegister() {
     this.error = '';
 
+    // Validate input fields
+    if (!this.user.username || !this.user.password || !this.user.confirmPassword) {
+      this.error = 'All fields are required';
+      return;
+    }
+
     if (this.user.password !== this.user.confirmPassword) {
       this.error = 'Passwords do not match';
       return;
     }
 
+    if (this.user.password.length < 6) {
+      this.error = 'Password must be at least 6 characters long';
+      return;
+    }
+
     const { confirmPassword, ...registerData } = this.user;
+    console.log('Attempting registration with:', { username: registerData.username });
+
     this.authService.register(registerData).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Registration successful:', response);
         this.router.navigate(['/login']);
       },
       error: (err: any) => {
         console.error('Registration error:', err);
-        this.error = err.error?.message || 'Registration failed. Please try again.';
+        if (err.status === 0) {
+          this.error = 'Unable to connect to the server. Please try again later.';
+        } else {
+          this.error = err.error?.message || 'Registration failed. Please try again.';
+        }
       }
     });
   }

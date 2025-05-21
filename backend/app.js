@@ -7,10 +7,11 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: '*', // Allow all origins temporarily for testing
+  origin: true, // Reflect the request origin
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  credentials: true,
+  maxAge: 86400 // Cache preflight requests for 24 hours
 }));
 app.use(express.json());
 
