@@ -5,10 +5,29 @@ import { TaskService, Task } from '../../services/task.service';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule],
+  template: `
+    <div class="container mx-auto p-4">
+      <h1 class="text-3xl font-bold mb-4">Task Manager</h1>
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <input type="text" class="w-full p-2 border border-gray-400 rounded" [(ngModel)]="newTask.title" placeholder="Task title">
+          <textarea class="w-full p-2 border border-gray-400 rounded" [(ngModel)]="newTask.description" placeholder="Task description"></textarea>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="createTask()">Create Task</button>
+        </div>
+        <div class="flex flex-col gap-2">
+          <ul class="list-none p-0">
+            <li class="flex justify-between items-center p-2 border border-gray-400 rounded" *ngFor="let task of tasks">
+              <span class="text-lg" [ngClass]="{'line-through': task.completed}">{{ task.title }}</span>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="toggleComplete(task)">Toggle Complete</button>
+              <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" (click)="deleteTask(task._id!)">Delete Task</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  `,
 })
 export class DashboardComponent implements OnInit {
   tasks: Task[] = [];
