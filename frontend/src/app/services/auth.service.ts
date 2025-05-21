@@ -7,6 +7,8 @@ import { tap, catchError } from 'rxjs/operators';
 interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
+  username: string | null;
+  isNewUser: boolean;
 }
 
 @Injectable({
@@ -16,7 +18,9 @@ export class AuthService {
   private apiUrl: string;
   private authState = new BehaviorSubject<AuthState>({
     token: this.getStoredToken(),
-    isAuthenticated: false
+    isAuthenticated: false,
+    username: localStorage.getItem('username'),
+    isNewUser: false
   });
   public authState$ = this.authState.asObservable();
 
@@ -38,6 +42,13 @@ export class AuthService {
   register(user: { username: string; password: string }): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/register`, user).pipe(
       tap(() => {
+        // Store username and set as new user
+        localStorage.setItem('username', user.username);
+        this.authState.next({
+          ...this.authState.value,
+          username: user.username,
+          isNewUser: true
+        });
         // After successful registration, we'll navigate to login
         this.router.navigate(['/login']);
       }),
@@ -54,7 +65,8 @@ export class AuthService {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user).pipe(
       tap(response => {
         if (response && response.token) {
-          this.setAuthState(response.token);
+          localStorage.setItem('username', user.username);
+          this.setAuthState(response.token, user.username);
           this.router.navigate(['/tasks']);
         }
       }),
@@ -68,12 +80,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    // Clear auth state
-    this.authState.next({
-      token: null,
-      isAuthenticated: false
-    });
+    this.clearAuth();
     // Navigate to login without reloading
     this.router.navigate(['/login']);
   }
@@ -98,26 +105,32 @@ export class AuthService {
       if (Date.now() >= expirationTime) {
         this.clearAuth();
       } else {
-        this.setAuthState(token);
+        const username = localStorage.getItem('username') || '';
+        this.setAuthState(token, username);
       }
     } catch (e) {
       this.clearAuth();
     }
   }
 
-  private setAuthState(token: string): void {
+  private setAuthState(token: string, username: string): void {
     localStorage.setItem('token', token);
     this.authState.next({
       token,
-      isAuthenticated: true
+      isAuthenticated: true,
+      username,
+      isNewUser: false
     });
   }
 
   private clearAuth(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
     this.authState.next({
       token: null,
-      isAuthenticated: false
+      isAuthenticated: false,
+      username: null,
+      isNewUser: false
     });
   }
 

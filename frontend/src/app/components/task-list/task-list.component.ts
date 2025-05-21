@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskService, Task } from '../../services/task.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-task-list',
@@ -10,7 +11,9 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./task-list.component.scss'],
   template: `
     <div class="task-container">
-      <h2>My Tasks</h2>
+      <div class="welcome-message">
+        <h2>{{ welcomeMessage }}</h2>
+      </div>
       <button (click)="showAddForm = true" class="add-button">Add New Task</button>
 
       <!-- Add/Edit Task Form -->
@@ -72,6 +75,7 @@ import { FormsModule } from '@angular/forms';
   `,
 })
 export class TaskListComponent implements OnInit {
+  welcomeMessage = '';
   tasks: Task[] = [];
   showAddForm = false;
   editingTask: Task | null = null;
@@ -81,7 +85,19 @@ export class TaskListComponent implements OnInit {
     completed: false,
   };
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private authService: AuthService
+  ) {
+    // Subscribe to auth state changes
+    this.authService.authState$.subscribe((state: { username: string | null; isNewUser: boolean }) => {
+      if (state.username) {
+        this.welcomeMessage = state.isNewUser
+          ? `Welcome ${state.username}!`
+          : `Welcome back, ${state.username}!`;
+      }
+    });
+  }
 
   ngOnInit() {
     this.loadTasks();
