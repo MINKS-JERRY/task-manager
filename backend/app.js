@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:4200', 'https://task-manager-frontend-3v10.onrender.com'],
+  origin: '*', // Allow all origins temporarily for testing
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
