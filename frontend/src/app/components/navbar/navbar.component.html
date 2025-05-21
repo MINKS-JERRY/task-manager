@@ -1,17 +1,18 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <a routerLink="/">Task Manager</a>
-  </div>
-  <div class="navbar-menu">
-    <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
-      <a routerLink="/login" routerLinkActive="active">Login</a>
-      <a routerLink="/tasks" class="text-white hover:text-gray-300">Tasks</a>
-      <a routerLink="/admin" class="text-white hover:text-gray-300 ml-4">Admin</a>
-      <a routerLink="/register" routerLinkActive="active">Register</a>
-    </ng-container>
-    <ng-template #loggedIn>
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <button class="logout-button" (click)="logout()">Logout</button>
-    </ng-template>
+<nav class="bg-gray-800 p-4">
+  <div class="container mx-auto flex justify-between items-center">
+    <div class="text-white font-bold text-xl">
+      <a routerLink="/" class="hover:text-gray-300">Task Manager</a>
+    </div>
+    <div class="flex items-center space-x-4">
+      <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+        <a routerLink="/login" class="text-white hover:text-gray-300">Login</a>
+        <a routerLink="/register" class="text-white hover:text-gray-300">Register</a>
+      </ng-container>
+      <ng-template #loggedIn>
+        <a routerLink="/tasks" class="text-white hover:text-gray-300">Tasks</a>
+        <a routerLink="/admin" class="text-white hover:text-gray-300">Admin</a>
+        <button (click)="logout()" class="text-white hover:text-gray-300">Logout</button>
+      </ng-template>
+    </div>
   </div>
 </nav>

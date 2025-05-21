@@ -40,7 +40,11 @@ export class AuthService {
       tap(response => {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
-          this.router.navigate(['/tasks']);
+          // After setting token, navigate to tasks
+          this.router.navigate(['/tasks']).then(() => {
+            // Force a page reload to ensure everything is updated
+            window.location.reload();
+          });
         }
       }),
       catchError((error: HttpErrorResponse) => {
@@ -54,7 +58,11 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    // After removing token, navigate to login
+    this.router.navigate(['/login']).then(() => {
+      // Force a page reload to ensure everything is updated
+      window.location.reload();
+    });
   }
 
   getToken(): string | null {
