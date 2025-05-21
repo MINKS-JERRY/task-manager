@@ -12,7 +12,7 @@ export const routes: Routes = [
   {
     path: 'tasks',
     loadComponent: () => import('./components/task-list/task-list.component').then(m => m.TaskListComponent),
-    canActivate: [AuthGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'login',

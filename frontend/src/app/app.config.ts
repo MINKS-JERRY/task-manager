@@ -1,18 +1,25 @@
-import { ApplicationConfig, isDevMode } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-
-import { routes } from './app-routing.module';
-import { tokenInterceptor } from './interceptors/token.interceptor';
+import { routes } from './app.routes';
 import { environment } from '../environments/environment';
-import { environment as prodEnvironment } from '../environments/environment.prod';
 
-const ENV = isDevMode() ? environment : prodEnvironment;
+function authInterceptor(req: any, next: any) {
+  const token = localStorage.getItem('token');
+  if (token) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+  return next(req);
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: 'environment', useValue: environment },
     provideRouter(routes),
-    provideHttpClient(withInterceptors([tokenInterceptor])),
-    { provide: 'environment', useValue: ENV }
+    provideHttpClient(withInterceptors([authInterceptor]))
   ]
 };
